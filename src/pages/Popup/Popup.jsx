@@ -14,28 +14,32 @@ window.chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 const Popup = () => {
-  const readHtml = () => {
+  let data;
+  const [records, setRecords] = React.useState([]);
+  function readHtml() {
     // read html from current page
     console.log("html:", getHTML());
+    const html = getHTML()
+    var parser = new DOMParser();
+    var doc = parser.parseFromString(html, "text/html");
+    const tds = Array.from(doc.querySelectorAll('table tr td'))
+    console.log("tds:", tds);
+    data = tds.map(td => td.innerText);
+    console.log("data:", data);
+    setRecords(tds.map(td => td.innerText));
+    console.log("records:", records)
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/pages/Popup/Popup.jsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React!
-        </a>
-        <button onClick={readHtml}>click me</button>
-      </header>
+    <div className="App" style={{ background: "white" }}>
+
+      <button onClick={() => { readHtml(); }}>click me</button>
+      <h2>Matic Data</h2>
+      <ul >
+        {records.map((record, index) => {
+          <li>record</li>
+        })}
+      </ul>
     </div>
   );
 };
